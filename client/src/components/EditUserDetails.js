@@ -4,6 +4,8 @@ import uploadFile from "../helpers/uploadFile";
 import Divider from "./Divider";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/userSlice";
 
 const EditUserDetails = ({ onClose, user }) => {
   const [data, setData] = useState({
@@ -38,7 +40,6 @@ const EditUserDetails = ({ onClose, user }) => {
   const handleUploadPhoto = async (e) => {
     const file = e.target.files[0];
     const uploadPhoto = await uploadFile(file);
-    // console.log("uploadPhoto", uploadPhoto);
     setData((preve) => {
       return {
         ...preve,
@@ -51,9 +52,19 @@ const EditUserDetails = ({ onClose, user }) => {
     e.stopPropagation();
     try {
       const URL = `${process.env.REACT_APP_BACKEND_URL}/api/update-user`;
-      const response = await axios.post(URL, data);
-      toast.success(response.data.message);
+      const response = await axios({
+        method: "post",
+        url: URL,
+        data: data,
+        withCredentials: true,
+      });
+      toast.success(response?.data?.message);
+      if (response.data.success) {
+        dispatch(setUser(response.data.data));
+        onClose();
+      }
     } catch (error) {
+      console.log(error);
       toast.error(error?.response?.data?.message);
     }
   };
