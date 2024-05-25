@@ -11,7 +11,7 @@ const Sidebar = () => {
   const user = useSelector((state) => state?.user);
   const [editUserOpen, setEditUserOpen] = useState(false);
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full grid grid-cols-[48px,1fr]">
       <div className="bg-slate-100 w-12 h-full rounded-tr-lg rounded-br-lg py-5 text-slate-700 flex flex-col justify-between">
         <div>
           <NavLink
@@ -43,6 +43,7 @@ const Sidebar = () => {
         </div>
       </div>
       {/**edit user details**/}
+      <div className="w-full bg-red-500">sidebar</div>
       {editUserOpen && <EditUserDetails onClose={() => setEditUserOpen(false)} user={user} />}
     </div>
   );

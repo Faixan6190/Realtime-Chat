@@ -20,7 +20,7 @@ const Home = () => {
         withCredentials: true,
       });
       dispatch(setUser(response.data.data));
-      if (response.data.logout) {
+      if (response.data.data.logout) {
         dispatch(logout());
         navigate("/email");
       }
@@ -40,11 +40,11 @@ const Home = () => {
       <section className={`${basePath && "hidden"}`}>
         <Outlet />
       </section>
-      <div>
+      <div className="lg:flex justify-center items-center flex-col gap-2 hidden">
         <div>
-          <img src={logo} alt="logo" width={200} />
+          <img src={logo} alt="logo" width={250} />
         </div>
-        <p>Select user to send message</p>
+        <p className="text-lg mt-2 text-slate-500">Select user to send message</p>
       </div>
     </div>
   );
