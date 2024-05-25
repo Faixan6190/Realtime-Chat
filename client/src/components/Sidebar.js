@@ -7,11 +7,13 @@ import Avatar from "./Avatar";
 import { useSelector } from "react-redux";
 import EditUserDetails from "./EditUserDetails";
 import { FiArrowUpLeft } from "react-icons/fi";
+import SearchUser from "./SearchUser";
 
 const Sidebar = () => {
   const user = useSelector((state) => state?.user);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [allUser, setAllUser] = useState([]);
+  const [openSearchUser, setOpenSearchUser] = useState(false);
   return (
     <div className="w-full h-full grid grid-cols-[48px,1fr] bg-white">
       <div className="bg-slate-100 w-12 h-full rounded-tr-lg rounded-br-lg py-5 text-slate-700 flex flex-col justify-between">
@@ -28,7 +30,7 @@ const Sidebar = () => {
             className="w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded"
             title="add friend"
           >
-            <span className="ml-1">
+            <span className="ml-1" onClick={() => setOpenSearchUser(true)}>
               <FaUserPlus size={25} />
             </span>
           </div>
@@ -64,6 +66,7 @@ const Sidebar = () => {
       {/**edit user details**/}
       {editUserOpen && <EditUserDetails onClose={() => setEditUserOpen(false)} user={user} />}
       {/* {search user} */}
+      {openSearchUser && <SearchUser onClose={() => setOpenSearchUser(false)} />}
     </div>
   );
 };
