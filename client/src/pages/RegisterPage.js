@@ -116,10 +116,15 @@ const RegisterPage = () => {
               Photo :
               <div className="h-14 bg-slate-200 flex justify-center items-center border rounded hover:border-primary cursor-pointer">
                 <p className="text-sm max-w-[300px] text-ellipsis line-clamp-1">
-                  {uploadPhoto?.name ? uploadPhoto?.name : "Upload profile photo"}
+                  {uploadPhoto?.name
+                    ? uploadPhoto?.name
+                    : "Upload profile photo"}
                 </p>
                 {uploadPhoto?.name && (
-                  <button className="text-lg ml-2 hover:text-red-600" onClick={handleClearUploadPhoto}>
+                  <button
+                    className="text-lg ml-2 hover:text-red-600"
+                    onClick={handleClearUploadPhoto}
+                  >
                     <IoClose />
                   </button>
                 )}
