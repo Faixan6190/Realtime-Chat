@@ -1,17 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import Loading from "./loading";
 import UserSearchCard from "./UserSearchCard";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const SearchUser = () => {
   const [searchUser, setSearchUser] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+
+  const handleSearchUser = async () => {
+    try {
+      const URL = `${process.env.REACT_APP_BACKEND_URL}/api/search-user`;
+      const response = axios.post(URL, {
+        search: search,
+      });
+      setSearchUser(response.data.data);
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
+  useEffect(() => {
+    handleSearchUser();
+  }, [search]);
+  console.log("searchUser", searchUser);
   return (
     <div className="fixed top-0 right-0 bottom-0 left-0 bg-slate-700 bg-opacity-40 p-2">
       <div className="w-full max-w-lg mx-auto mt-10">
         {/* input search user */}
         <div className="bg-white rounded h-14 overflow-hidden flex">
-          <input className="w-full outline-none py-1 h-full px-4" type="text" placeholder="Search user by name, email...." />
+          <input
+            className="w-full outline-none py-1 h-full px-4"
+            type="text"
+            placeholder="Search user by name, email...."
+            onChange={(e) => setSearch(e.target.value)}
+            value={search}
+          />
           <div className="h-14 w-14 flex justify-center items-center">
             <IoSearchOutline size={25} />
           </div>
