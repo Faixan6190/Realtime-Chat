@@ -6,7 +6,7 @@ const searchUser = async (request, response) => {
     const query = new RegExp(search, "i", "g");
     const user = await UserModel.find({
       $or: [{ name: query }, { email: query }],
-    });
+    }).select("-password");
     return response.json({
       message: "all user",
       data: user,

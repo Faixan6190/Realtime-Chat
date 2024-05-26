@@ -11,11 +11,13 @@ const SearchUser = () => {
   const [search, setSearch] = useState("");
 
   const handleSearchUser = async () => {
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/search-user`;
     try {
-      const URL = `${process.env.REACT_APP_BACKEND_URL}/api/search-user`;
-      const response = axios.post(URL, {
+      setLoading(true);
+      const response = await axios.post(URL, {
         search: search,
       });
+      setLoading(false);
       setSearchUser(response.data.data);
     } catch (error) {
       toast.error(error?.response?.data?.message);
