@@ -55,12 +55,12 @@ const MessagePage = () => {
       <section className="h-[calc(100vh-128px)] overflow-x-hidden overflow-y-scroll scrollbar">show all message</section>
       {/* send message */}
       <section className="h-16 bg-white flex items-center px-4">
-        <div className="relative flex justify-center items-center w-11 h-11 rounded-full hover:bg-primary hover:text-white">
-          <button>
+        <div className="relative">
+          <button className="flex justify-center items-center w-11 h-11 rounded-full hover:bg-primary hover:text-white">
             <FaPlus size={20} />
           </button>
           {/* video and image */}
-          <div className="bg-white shadow rounded">
+          <div className="bg-white shadow rounded absolute bottom-0">
             <form>
               <label htmlFor="uploadImage">
                 <div>
