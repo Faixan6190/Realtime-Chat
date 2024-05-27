@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import Avatar from "./Avatar";
 
 const MessagePage = () => {
   const params = useParams();
@@ -10,6 +11,7 @@ const MessagePage = () => {
     email: "",
     profile_pic: "",
     online: false,
+    _id: "",
   });
   console.log("params", params.userId);
   useEffect(() => {
@@ -22,7 +24,13 @@ const MessagePage = () => {
   }, [socketConnection, params?.userId]);
   return (
     <div>
-      <header className="sticky top-0 h-16 bg-white"></header>
+      <header className="sticky top-0 h-16 bg-white">
+        <div>
+          <div>
+            <Avatar width={50} height={50} imageUrl={dataUser?.profile_pic} name={dataUser?.name} userId={dataUser?._id} />
+          </div>
+        </div>
+      </header>
     </div>
   );
 };

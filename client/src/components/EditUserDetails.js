@@ -64,7 +64,7 @@ const EditUserDetails = ({ onClose, user }) => {
         onClose();
       }
     } catch (error) {
-      console.log(error);
+      console.log(error || error.message || error.code);
       toast.error(error?.response?.data?.message);
     }
   };
