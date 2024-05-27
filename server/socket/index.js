@@ -23,7 +23,7 @@ io.on("connection", async (socket) => {
   const user = await getUserDetailsFromToken(token);
   // create a room
   socket.join(user?._id);
-  onlineUser.add(user?._id);
+  onlineUser.add(user?._id?.toString());
   io.emit("onlineUser", Array.from(onlineUser));
   socket.on("message-page", async (userId) => {
     console.log("userId", userId);
@@ -32,6 +32,7 @@ io.on("connection", async (socket) => {
       _id: userDetails?._id,
       name: userDetails?.name,
       email: userDetails?.email,
+      profile_pic: userDetails?.profile_pic,
       online: onlineUser.has(userId),
     };
     socket.emit("message-user", payload);
