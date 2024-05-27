@@ -4,8 +4,9 @@ import cors from "cors";
 import connectDB from "./config/connectDB.js";
 import router from "./routes/index.js";
 import cookieParser from "cookie-parser";
+import { app, server } from "./socket/index.js";
 
-const app = express();
+// const app = express();
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
@@ -28,5 +29,5 @@ app.get("/", (request, response) => {
 app.use("/api", router);
 
 connectDB().then(() => {
-  app.listen(PORT, () => console.log(`server running at ${PORT}`));
+  server.listen(PORT, () => console.log(`server running at ${PORT}`));
 });

@@ -37,7 +37,7 @@ const Sidebar = () => {
         </div>
         <div className="flex flex-col items-center">
           <button className="mx-auto" title={user?.name} onClick={() => setEditUserOpen(true)}>
-            <Avatar width={30} height={30} name={user?.name} imageUrl={user?.profile_pic} />
+            <Avatar width={30} height={30} name={user?.name} imageUrl={user?.profile_pic} userId={user?._id} />
           </button>
           <button className="w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded" title="logout">
             <span className="-ml-2">
