@@ -16,7 +16,7 @@ const io = new Server(server, {
 //online user
 const onlineUser = new Set();
 io.on("connection", async (socket) => {
-  console.log("connected user", socket.id);
+  // console.log("connected user", socket.id);
   const token = socket.handshake.auth.token;
   // current user details
   const user = await getUserDetailsFromToken(token);
@@ -27,7 +27,7 @@ io.on("connection", async (socket) => {
   //disconnect
   socket.on("disconnect", () => {
     onlineUser.delete(user?._id);
-    console.log("disconnect user", socket.id);
+    // console.log("disconnect user", socket.id);
   });
 });
 

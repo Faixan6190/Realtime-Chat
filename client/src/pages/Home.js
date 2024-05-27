@@ -12,7 +12,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  console.log("user", user);
+  // console.log("user", user);
   const fetchUserDetails = async () => {
     try {
       const URL = `${process.env.REACT_APP_BACKEND_URL}/api/user-details`;
@@ -40,7 +40,7 @@ const Home = () => {
       },
     });
     socketConnection.on("onlineUser", (data) => {
-      console.log(data);
+      // console.log(data);
       dispatch(setOnlineUser(data));
     });
     return () => {
