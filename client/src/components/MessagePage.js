@@ -9,6 +9,9 @@ import { FaImage } from "react-icons/fa6";
 import { FaVideo } from "react-icons/fa6";
 import uploadFile from "../helpers/uploadFile";
 import { IoClose } from "react-icons/io5";
+import Loading from "./loading";
+import backgroundImage from "../assets/wallpaper.jpeg";
+import { IoMdSend } from "react-icons/io";
 
 const MessagePage = () => {
   const params = useParams();
@@ -27,13 +30,17 @@ const MessagePage = () => {
     imageUrl: "",
     videoUrl: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleUploadImageVideoOpen = () => {
     setOpenImageVideoUpload((preve) => !preve);
   };
   const handleUploadImage = async (e) => {
     const file = e.target.files[0];
+    setLoading(true);
     const uploadPhoto = await uploadFile(file);
+    setLoading(false);
+    setOpenImageVideoUpload(false);
     setMessage((preve) => {
       return {
         ...preve,
@@ -51,11 +58,22 @@ const MessagePage = () => {
   };
   const handleUploadVideo = async (e) => {
     const file = e.target.files[0];
+    setLoading(true);
     const uploadPhoto = await uploadFile(file);
+    setLoading(false);
+    setOpenImageVideoUpload(false);
     setMessage((preve) => {
       return {
         ...preve,
         videoUrl: uploadPhoto.url,
+      };
+    });
+  };
+  const handleClearUploadVideo = () => {
+    setMessage((preve) => {
+      return {
+        ...preve,
+        videoUrl: "",
       };
     });
   };
@@ -69,8 +87,32 @@ const MessagePage = () => {
     }
   }, [socketConnection, params?.userId, user]);
 
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    setMessage((preve) => {
+      return {
+        ...preve,
+        text: value,
+      };
+    });
+  };
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (message.text || message.imageUrl || message.videoUrl) {
+      if (socketConnection) {
+        socketConnection.emit("new message", {
+          sender: user?._id,
+          receiver: params.userId,
+          text: message.text,
+          imageUrl: message.imageUrl,
+          videoUrl: message.videoUrl,
+        });
+      }
+    }
+  };
+
   return (
-    <div>
+    <div style={{ backgroundImage: `url(${backgroundImage})` }} className="bg-no-repeat bg-cover">
       <header className="sticky top-0 h-16 bg-white flex justify-between items-center px-4">
         <div className="flex items-center gap-4">
           <Link to={"/"} className="lg:hidden">
@@ -93,7 +135,7 @@ const MessagePage = () => {
         </div>
       </header>
       {/* show all message */}
-      <section className="h-[calc(100vh-128px)] overflow-x-hidden overflow-y-scroll scrollbar relative">
+      <section className="h-[calc(100vh-128px)] overflow-x-hidden overflow-y-scroll scrollbar relative bg-slate-200 bg-opacity-50">
         {/* upload image display */}
         {message.imageUrl && (
           <div className="w-full h-full bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden">
@@ -101,19 +143,34 @@ const MessagePage = () => {
               <IoClose size={30} />
             </div>
             <div className="bg-white p-3">
-              <img src={message.imageUrl} alt="uploadImage" className="aspect-video w-full h-full max-w-sm m-2" />
+              <img
+                src={message.imageUrl}
+                alt="uploadImage"
+                className="aspect-square w-full h-full max-w-sm m-2 object-scale-down"
+              />
             </div>
           </div>
         )}
-        {/* upload image display */}
+        {/* upload video display */}
         {message.videoUrl && (
           <div className="w-full h-full bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden">
-            <div className="w-fit p-2 absolute top-0 right-0 cursor-pointer hover:text-red-600" onClick={handleClearUploadImage}>
+            <div className="w-fit p-2 absolute top-0 right-0 cursor-pointer hover:text-red-600" onClick={handleClearUploadVideo}>
               <IoClose size={30} />
             </div>
             <div className="bg-white p-3">
-              <video src={message.videoUrl} className="aspect-video w-full h-full max-w-sm m-2" controls muted autoPlay></video>
+              <video
+                src={message.videoUrl}
+                className="aspect-square w-full h-full max-w-sm m-2 object-scale-down"
+                controls
+                muted
+                autoPlay
+              ></video>
             </div>
+          </div>
+        )}
+        {loading && (
+          <div className="w-full h-full flex justify-center items-center">
+            <Loading />
           </div>
         )}
         show all message
@@ -143,12 +200,25 @@ const MessagePage = () => {
                   </div>
                   <p>video</p>
                 </label>
-                <input type="file" id="uploadImage" onChange={handleUploadImage} />
-                <input type="file" id="uploadVideo" onChange={handleUploadVideo} />
+                <input type="file" id="uploadImage" onChange={handleUploadImage} className="hidden" />
+                <input type="file" id="uploadVideo" onChange={handleUploadVideo} className="hidden" />
               </form>
             </div>
           )}
         </div>
+        {/* input box */}
+        <form className="w-full h-full flex gap-2" onSubmit={handleSendMessage}>
+          <input
+            type="text"
+            placeholder="Type here message..."
+            className="py-1 px-4 outline-none w-full h-full"
+            value={message.text}
+            onChange={handleOnChange}
+          />
+          <button className="text-primary hover:text-secondary">
+            <IoMdSend size={28} />
+          </button>
+        </form>
       </section>
     </div>
   );

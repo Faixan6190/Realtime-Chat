@@ -37,6 +37,11 @@ io.on("connection", async (socket) => {
     };
     socket.emit("message-user", payload);
   });
+  // new message
+  socket.on("new message", (data) => {
+    console.log("new message", data);
+  });
+
   //disconnect
   socket.on("disconnect", () => {
     onlineUser.delete(user?._id);
