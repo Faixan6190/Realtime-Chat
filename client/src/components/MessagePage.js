@@ -8,6 +8,7 @@ import { FaPlus } from "react-icons/fa6";
 import { FaImage } from "react-icons/fa6";
 import { FaVideo } from "react-icons/fa6";
 import uploadFile from "../helpers/uploadFile";
+import { IoClose } from "react-icons/io5";
 
 const MessagePage = () => {
   const params = useParams();
@@ -33,8 +34,31 @@ const MessagePage = () => {
   const handleUploadImage = async (e) => {
     const file = e.target.files[0];
     const uploadPhoto = await uploadFile(file);
+    setMessage((preve) => {
+      return {
+        ...preve,
+        imageUrl: uploadPhoto.url,
+      };
+    });
   };
-  const handleUploadVideo = () => {};
+  const handleClearUploadImage = () => {
+    setMessage((preve) => {
+      return {
+        ...preve,
+        imageUrl: "",
+      };
+    });
+  };
+  const handleUploadVideo = async (e) => {
+    const file = e.target.files[0];
+    const uploadPhoto = await uploadFile(file);
+    setMessage((preve) => {
+      return {
+        ...preve,
+        videoUrl: uploadPhoto.url,
+      };
+    });
+  };
 
   useEffect(() => {
     if (socketConnection) {
@@ -69,7 +93,31 @@ const MessagePage = () => {
         </div>
       </header>
       {/* show all message */}
-      <section className="h-[calc(100vh-128px)] overflow-x-hidden overflow-y-scroll scrollbar">show all message</section>
+      <section className="h-[calc(100vh-128px)] overflow-x-hidden overflow-y-scroll scrollbar relative">
+        {/* upload image display */}
+        {message.imageUrl && (
+          <div className="w-full h-full bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden">
+            <div className="w-fit p-2 absolute top-0 right-0 cursor-pointer hover:text-red-600" onClick={handleClearUploadImage}>
+              <IoClose size={30} />
+            </div>
+            <div className="bg-white p-3">
+              <img src={message.imageUrl} alt="uploadImage" className="aspect-video w-full h-full max-w-sm m-2" />
+            </div>
+          </div>
+        )}
+        {/* upload image display */}
+        {message.videoUrl && (
+          <div className="w-full h-full bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden">
+            <div className="w-fit p-2 absolute top-0 right-0 cursor-pointer hover:text-red-600" onClick={handleClearUploadImage}>
+              <IoClose size={30} />
+            </div>
+            <div className="bg-white p-3">
+              <video src={message.videoUrl} className="aspect-video w-full h-full max-w-sm m-2" controls muted autoPlay></video>
+            </div>
+          </div>
+        )}
+        show all message
+      </section>
       {/* send message */}
       <section className="h-16 bg-white flex items-center px-4">
         <div className="relative">
