@@ -3,6 +3,8 @@ import { Server } from "socket.io";
 import http from "http";
 import getUserDetailsFromToken from "../helpers/getUserDetailsFromToken.js";
 import UserModel from "../models/UserModel.js";
+import { ConversationModel, MessageModel } from "../models/ConversationModel.js";
+import { create } from "domain";
 
 const app = express();
 
@@ -38,8 +40,42 @@ io.on("connection", async (socket) => {
     socket.emit("message-user", payload);
   });
   // new message
-  socket.on("new message", (data) => {
-    console.log("new message", data);
+  socket.on("new message", async (data) => {
+    //check conversation is available both user
+    let conversation = await ConversationModel.findOne({
+      $or: [
+        { sender: data?.sender, receiver: data?.receiver },
+        { sender: data?.receiver, receiver: data?.sender },
+      ],
+    });
+    console.log("conversation", conversation);
+    // if conversation is not available
+    if (!conversation) {
+      const createConversation = await ConversationModel({
+        sender: data?.sender,
+        receiver: data?.receiver,
+      });
+      conversation = await createConversation.save();
+    }
+    const message = new MessageModel({
+      text: data.text,
+      imageUrl: data.imageUrl,
+      videoUrl: data.videoUrl,
+    });
+    const saveMessage = await message.save();
+    const updateConversation = await ConversationModel.updateOne(
+      { _id: conversation?._id },
+      {
+        $push: { messages: saveMessage?._id },
+      }
+    );
+    const getConversation = await ConversationModel.findOne({
+      $or: [
+        { sender: data?.sender, receiver: data?.receiver },
+        { sender: data?.receiver, receiver: data?.sender },
+      ],
+    });
+    console.log("getConversation", getConversation);
   });
 
   //disconnect
