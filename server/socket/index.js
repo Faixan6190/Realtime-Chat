@@ -78,8 +78,8 @@ io.on("connection", async (socket) => {
     })
       .populate("messages")
       .sort({ updatedAt: -1 });
-    io.to(data?.sender).emit("messsage", getConversationMessage);
-    io.to(data?.receiver).emit("messsage", getConversationMessage);
+    io.to(data?.sender).emit("message", getConversationMessage.messages);
+    io.to(data?.receiver).emit("message", getConversationMessage.messages);
   });
 
   //disconnect

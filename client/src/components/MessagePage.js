@@ -12,6 +12,7 @@ import { IoClose } from "react-icons/io5";
 import Loading from "./loading";
 import backgroundImage from "../assets/wallpaper.jpeg";
 import { IoMdSend } from "react-icons/io";
+import moment from "moment";
 
 const MessagePage = () => {
   const params = useParams();
@@ -31,6 +32,8 @@ const MessagePage = () => {
     videoUrl: "",
   });
   const [loading, setLoading] = useState(false);
+  const [allMessage, setAllMessage] = useState([]);
+  // console.log("allMessage", allMessage);
 
   const handleUploadImageVideoOpen = () => {
     setOpenImageVideoUpload((preve) => !preve);
@@ -86,6 +89,7 @@ const MessagePage = () => {
       });
       socketConnection.on("message", (data) => {
         console.log("message data", data);
+        setAllMessage(data);
       });
     }
   }, [socketConnection, params?.userId, user]);
@@ -110,6 +114,11 @@ const MessagePage = () => {
           imageUrl: message.imageUrl,
           videoUrl: message.videoUrl,
           msgByUserId: user?._id,
+        });
+        setMessage({
+          text: "",
+          imageUrl: "",
+          videoUrl: "",
         });
       }
     }
@@ -177,7 +186,17 @@ const MessagePage = () => {
             <Loading />
           </div>
         )}
-        show all message
+        {/* all message show here */}
+        <div className="flex flex-col gap-2">
+          {allMessage.map((msg, index) => {
+            return (
+              <div className={`bg-white p-1 py-1 my-2 rounded w-fit ${user._id === msg.msgByUserId ? "ml-auto" : ""}`}>
+                <p className="px-2">{msg.text}</p>
+                <p className="text-xs ml-auto w-fit">{moment(msg.createdAt).format("hh:mm")}</p>
+              </div>
+            );
+          })}
+        </div>
       </section>
       {/* send message */}
       <section className="h-16 bg-white flex items-center px-4">
