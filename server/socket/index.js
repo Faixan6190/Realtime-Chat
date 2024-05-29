@@ -24,7 +24,7 @@ io.on("connection", async (socket) => {
   // current user details
   const user = await getUserDetailsFromToken(token);
   // create a room
-  socket.join(user?._id);
+  socket.join(user?._id.toString());
   onlineUser.add(user?._id?.toString());
   io.emit("onlineUser", Array.from(onlineUser));
   socket.on("message-page", async (userId) => {
@@ -61,6 +61,7 @@ io.on("connection", async (socket) => {
       text: data.text,
       imageUrl: data.imageUrl,
       videoUrl: data.videoUrl,
+      msgByUserId: data?.msgByUserId,
     });
     const saveMessage = await message.save();
     const updateConversation = await ConversationModel.updateOne(
@@ -69,13 +70,16 @@ io.on("connection", async (socket) => {
         $push: { messages: saveMessage?._id },
       }
     );
-    const getConversation = await ConversationModel.findOne({
+    const getConversationMessage = await ConversationModel.findOne({
       $or: [
         { sender: data?.sender, receiver: data?.receiver },
         { sender: data?.receiver, receiver: data?.sender },
       ],
-    });
-    console.log("getConversation", getConversation);
+    })
+      .populate("messages")
+      .sort({ updatedAt: -1 });
+    io.to(data?.sender).emit("messsage", getConversationMessage);
+    io.to(data?.receiver).emit("messsage", getConversationMessage);
   });
 
   //disconnect

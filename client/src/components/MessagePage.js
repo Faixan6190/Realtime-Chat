@@ -84,6 +84,9 @@ const MessagePage = () => {
       socketConnection.on("message-user", (data) => {
         setDataUser(data);
       });
+      socketConnection.on("message", (data) => {
+        console.log("message data", data);
+      });
     }
   }, [socketConnection, params?.userId, user]);
 
@@ -106,6 +109,7 @@ const MessagePage = () => {
           text: message.text,
           imageUrl: message.imageUrl,
           videoUrl: message.videoUrl,
+          msgByUserId: user?._id,
         });
       }
     }
