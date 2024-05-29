@@ -168,8 +168,6 @@ const MessagePage = () => {
               >
                 <div className="w-full">
                   {msg?.imageUrl && <img src={msg?.imageUrl} className="w-full h-full object-scale-down" />}
-                </div>
-                <div className="w-full">
                   {msg?.videoUrl && <video src={msg?.videoUrl} controls className="w-full h-full object-scale-down" />}
                 </div>
                 <p className="px-2">{msg.text}</p>

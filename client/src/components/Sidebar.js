@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoChatbubbleEllipses } from "react-icons/io5";
 import { FaUserPlus } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
@@ -14,6 +14,17 @@ const Sidebar = () => {
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [allUser, setAllUser] = useState([]);
   const [openSearchUser, setOpenSearchUser] = useState(false);
+  const socketConnection = useSelector((state) => state?.user?.socketConnection);
+
+  useEffect(() => {
+    if (socketConnection) {
+      socketConnection.emit("sidebar", user._id);
+      socketConnection.on("conversation", (data) => {
+        console.log("conversation", data);
+      });
+    }
+  }, [socketConnection, user]);
+
   return (
     <div className="w-full h-full grid grid-cols-[48px,1fr] bg-white">
       <div className="bg-slate-100 w-12 h-full rounded-tr-lg rounded-br-lg py-5 text-slate-700 flex flex-col justify-between">
