@@ -21,6 +21,25 @@ const Sidebar = () => {
       socketConnection.emit("sidebar", user._id);
       socketConnection.on("conversation", (data) => {
         console.log("conversation", data);
+        const conversationUserData = data.map((conversationUser, index) => {
+          if (conversationUser?.sender?._id === conversationUser?.receiver?._id) {
+            return {
+              ...conversationUser,
+              userDetails: conversationUser?.sender,
+            };
+          } else if (conversationUser?.receiver?._id !== user?._id) {
+            return {
+              ...conversationUser,
+              userDetails: conversationUser.receiver,
+            };
+          } else {
+            return {
+              ...conversationUser,
+              userDetails: conversationUser.sender,
+            };
+          }
+        });
+        setAllUser(data);
       });
     }
   }, [socketConnection, user]);
@@ -71,6 +90,9 @@ const Sidebar = () => {
               <p className="text-lg text-center text-slate-400">Explore users to start a conversation with.</p>
             </div>
           )}
+          {allUser.map((conv, index) => {
+            return <div key={conv?._id}></div>;
+          })}
         </div>
       </div>
       {/**edit user details**/}
