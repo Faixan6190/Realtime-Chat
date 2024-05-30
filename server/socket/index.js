@@ -4,7 +4,6 @@ import http from "http";
 import getUserDetailsFromToken from "../helpers/getUserDetailsFromToken.js";
 import UserModel from "../models/UserModel.js";
 import { ConversationModel, MessageModel } from "../models/ConversationModel.js";
-import { create } from "domain";
 
 const app = express();
 
@@ -98,7 +97,9 @@ io.on("connection", async (socket) => {
       $or: [{ sender: currentUserId }, { receiver: currentUserId }],
     })
       .sort({ updatedAt: -1 })
-      .populate("messages");
+      .populate("messages")
+      .populate("sender")
+      .populate("receiver");
     console.log("currentUserConversation", currentUserConversation);
     const conversation = currentUserConversation.map((conv) => {
       const countUnseenMsg = conv.messages.reduce((preve, curr) => preve + (curr.seen ? 0 : 1), 0);
