@@ -27,7 +27,6 @@ const Avatar = ({ userId, name, imageUrl, width, height }) => {
   ];
   const randomNumber = Math.floor(Math.random() * 10);
   const isOnline = onlineUser.includes(userId);
-
   return (
     <div className={`text-slate-800 rounded-full font-bold relative`} style={{ width: width + "px", height: height + "px" }}>
       {imageUrl ? (
