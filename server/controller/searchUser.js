@@ -3,7 +3,7 @@ import UserModel from "../models/UserModel.js";
 const searchUser = async (request, response) => {
   try {
     const { search } = request.body;
-    const query = new RegExp(search, "i", "g");
+    const query = new RegExp(search, "ig");
     const user = await UserModel.find({
       $or: [{ name: query }, { email: query }],
     }).select("-password");

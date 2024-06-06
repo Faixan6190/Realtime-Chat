@@ -1,6 +1,9 @@
 .scrollbar::-webkit-scrollbar {
   width: 10px;
 }
+.rounded-full img {
+  height: 100% !important   ;
+}
 .scrollbar::-webkit-scrollbar-track {
   @apply bg-slate-100;
 }
