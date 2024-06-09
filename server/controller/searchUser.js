@@ -18,6 +18,8 @@ const searchUser = async (request, response) => {
       error: true,
     });
   }
+  else
+  
 };
 
 export default searchUser;
