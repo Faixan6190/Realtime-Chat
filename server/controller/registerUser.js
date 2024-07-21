@@ -14,7 +14,6 @@ const registerUser = async (request, response) => {
     // password into hashpassword
     const salt = await bcryptjs.genSalt(10);
     const hashpassword = await bcryptjs.hash(password, salt);
-    // console.log("hashpassword", hashpassword);
     const payload = {
       name,
       email,
